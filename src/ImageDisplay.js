@@ -6,6 +6,13 @@ const ImageDisplay = () => {
     const [imageIds, setImageIds] = useState([]);
     const [images, setImages] = useState([]);
 
+    useEffect(() => {
+        if (imageIds.length > 0) {
+            setImages([]);
+            imageIds.forEach((id) => fetchImage(id));
+        }
+    }, [imageIds]);
+
     const handleCategoryChange = (event) => {
         setCategory(event.target.value);
     };
@@ -42,12 +49,20 @@ const ImageDisplay = () => {
         }
     };
 
-    useEffect(() => {
-        if (imageIds.length > 0) {
-            setImages([]);
-            imageIds.forEach((id) => fetchImage(id));
+    const handleDeleteImage = async (id) => {
+        try {
+            await axios.delete(`http://localhost:3333/api/images/${id}`);
+            // Update the images state by removing the deleted image
+            setImages((prevImages) =>
+                prevImages.filter((image, index) => index !== id)
+            );
+            setImageIds((prevImageIds) =>
+                prevImageIds.filter((imageId, index) => index !== id)
+            );
+        } catch (error) {
+            console.error("Error deleting image:", error);
         }
-    }, [imageIds]);
+    };
 
     return (
         <div>
@@ -61,16 +76,24 @@ const ImageDisplay = () => {
                 <button onClick={fetchImageIds}>Fetch Images</button>
                 <div style={{ display: "flex", flexWrap: "wrap" }}>
                     {images.map((imageUrl, index) => (
-                        <img
-                            key={index}
-                            src={imageUrl}
-                            alt={index + 1}
-                            style={{
-                                width: "200px",
-                                height: "200px",
-                                margin: "5px",
-                            }}
-                        />
+                        <div key={index}>
+                            <img
+                                src={imageUrl}
+                                alt={index + 1}
+                                style={{
+                                    width: "200px",
+                                    height: "200px",
+                                    margin: "5px",
+                                }}
+                            />
+                            <button
+                                onClick={() =>
+                                    handleDeleteImage(imageIds[index])
+                                }
+                            >
+                                Delete
+                            </button>
+                        </div>
                     ))}
                 </div>
             </div>
