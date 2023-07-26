@@ -20,7 +20,7 @@ const ImageDisplay = () => {
     const fetchImageIds = async () => {
         try {
             const response = await axios.get(
-                `http://localhost:3333/api/images/category/${category}`
+                `https://big-lapa-api-production.up.railway.app/api/images/category/${category}`
             );
             setImageIds(response.data);
         } catch (error) {
@@ -31,7 +31,7 @@ const ImageDisplay = () => {
     const fetchImage = async (id) => {
         try {
             const response = await axios.get(
-                `http://localhost:3333/api/images/${id}`,
+                `https://big-lapa-api-production.up.railway.app/api/images/${id}`,
                 { responseType: "arraybuffer" }
             );
             const base64 = btoa(
@@ -51,7 +51,9 @@ const ImageDisplay = () => {
 
     const handleDeleteImage = async (id) => {
         try {
-            await axios.delete(`http://localhost:3333/api/images/${id}`);
+            await axios.delete(
+                `https://big-lapa-api-production.up.railway.app/api/images/${id}`
+            );
             // Update the images state by removing the deleted image
             setImages((prevImages) =>
                 prevImages.filter((image, index) => index !== id)
