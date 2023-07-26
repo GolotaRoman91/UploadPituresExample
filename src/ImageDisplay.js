@@ -64,7 +64,7 @@ const ImageDisplay = () => {
                         <img
                             key={index}
                             src={imageUrl}
-                            alt={`Image ${index + 1}`}
+                            alt={index + 1}
                             style={{
                                 width: "200px",
                                 height: "200px",
